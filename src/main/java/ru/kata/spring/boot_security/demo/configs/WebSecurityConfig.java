@@ -42,13 +42,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {  //проверяет по логину и паролю существует ли такой пользователь
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setHideUserNotFoundExceptions(false);
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userService);
-        auth.authenticationProvider(provider);
+        provider.setUserDetailsService(userService);  //Предоставляет пользователей из userService (по имени пользователя)
+        return provider;
     }
 
     @Bean

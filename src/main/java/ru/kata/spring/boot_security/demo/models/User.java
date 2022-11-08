@@ -4,14 +4,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.*;
 
 @Entity
 public class User implements UserDetails {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -47,16 +46,18 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn (name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
+
 
     public User() {}
 
-    public User(String name, String lastname, String country, String password, String username) {
+    public User(String name, String lastname, String country, String password, String username, Set<Role> roles) {
         this.name = name;
         this.lastname = lastname;
         this.country = country;
         this.username = username;
         this.password = password;
+        this.roles = roles;
 
     }
 
@@ -102,7 +103,8 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && Objects.equals(name, user.name) && Objects.equals(lastname, user.lastname) && Objects.equals(country, user.country);
+        return id == user.id && Objects.equals(name, user.name) && Objects.equals(lastname, user.lastname) && Objects.equals(country, user.country)
+                && Objects.equals(username, user.username)&& Objects.equals(password, user.password);
     }
 
     @Override
@@ -142,7 +144,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public Set<Role> getRoles() {
