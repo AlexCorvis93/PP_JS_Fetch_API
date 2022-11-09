@@ -1,9 +1,11 @@
 package ru.kata.spring.boot_security.demo.controllers;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -24,15 +26,18 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String mainAdmin(Model m) {
+    public String mainAdmin(Model m, @AuthenticationPrincipal User current) {
+        m.addAttribute("roles", roleService.getRoles());
         m.addAttribute("users", userService.users());
+        m.addAttribute("current", current);
         return "admin/main";
     }
 
     @GetMapping("/new")
-    public String newUser(ModelMap m) {
+    public String newUser(ModelMap m, @AuthenticationPrincipal User current) {
         m.addAttribute("roles", roleService.getRoles());
         m.addAttribute("user", new User());
+        m.addAttribute("current", current);
         return "admin/new";
     }
 
@@ -47,10 +52,9 @@ public class AdminController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(ModelMap m,  @PathVariable("id") int id ) {
-        m.addAttribute("roles", roleService.getRoles());
-        m.addAttribute("user", userService.showUser(id));
-        return "admin/edit";
+    public String edit(ModelMap m,  @PathVariable("id") int id) {
+        m.addAttribute("one", userService.showUser(id));
+        return "admin/main";
 
     }
 
