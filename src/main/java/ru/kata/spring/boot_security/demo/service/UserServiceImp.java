@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.models.Role;
+
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
@@ -64,6 +64,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
             userFromRepo.setCountry(user.getCountry());
             userFromRepo.setUsername(user.getUsername());
             userFromRepo.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            userFromRepo.setRoles(user.getRoles());
             userRepository.save(userFromRepo);
         } else {
             throw new UsernameNotFoundException("User not found");
