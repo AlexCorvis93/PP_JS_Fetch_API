@@ -63,7 +63,9 @@ public class UserServiceImp implements UserService, UserDetailsService {
             userFromRepo.setLastname(user.getLastname());
             userFromRepo.setCountry(user.getCountry());
             userFromRepo.setUsername(user.getUsername());
-            userFromRepo.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            if (!userFromRepo.getPassword().equals(user.getPassword())){
+                userFromRepo.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            }
             userFromRepo.setRoles(user.getRoles());
             userRepository.save(userFromRepo);
         } else {
